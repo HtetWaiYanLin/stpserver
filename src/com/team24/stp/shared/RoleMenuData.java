@@ -11,7 +11,6 @@ public class RoleMenuData {
 	private boolean show;
 	private long n2;
 	private RoleMenuData[] childmenus;
-	private ButtonData[] btns;
 
 	public RoleMenuData() {
 		clearProperties();
@@ -73,21 +72,12 @@ public class RoleMenuData {
 		this.childmenus = childmenus;
 	}
 
-	public ButtonData[] getBtns() {
-		return btns;
-	}
-
-	public void setBtns(ButtonData[] btns) {
-		this.btns = btns;
-	}
-
 	protected void clearProperties() {
 		this.syskey = 0;
 		this.t2 = "";
 		this.t3 = "";
 		this.result = false;
 		this.show = false;
-		this.btns = new ButtonData[0];
 		this.childmenus = new RoleMenuData[0];
 	}
 

@@ -67,6 +67,8 @@ public class MenuDataMgr {
 		String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
 		data.setModifieddate(date);
 		if (data.getSyskey() == 0) {
+			String menucode = MenuDao.getMenuCode(con);
+			data.setT1(menucode);
 			data.setCreateddate(date);
 			data.setRecordstatus(1);
 		}
@@ -96,17 +98,6 @@ public class MenuDataMgr {
 		return res;
 	}
 
-	public static int getMenuCount(String searchVal, MrBean user) {
-
-		Connection conn = ConnAdmin.getConn(user.getUser().getOrganizationID());
-		int res = 0;
-		try {
-			res = MenuDao.getMenuCount(searchVal, conn);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return res;
-	}
 
 	public static MenuViewDataset searchMenubyValue(String searchVal, String start, String end, String sort, String order, MrBean user) {
 		Connection conn = ConnAdmin.getConn(user.getUser().getOrganizationID());

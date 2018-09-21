@@ -154,182 +154,6 @@ public class Service001 {
 	 * return res; }
 	 */
 
-	/*
-	 * @POST
-	 * 
-	 * @Path("deleteUser")
-	 * 
-	 * @Produces(MediaType.APPLICATION_JSON)
-	 * 
-	 * @Consumes(MediaType.APPLICATION_JSON) public Result deleteUserData(String
-	 * skey) { Result res = new Result(); skey = skey.substring(1, skey.length() -
-	 * 1); long syskey = 0; try { syskey = Long.parseLong(skey); res =
-	 * UserDataMgr.deleteUserData(syskey, getUser()); } catch (Exception e) {
-	 * res.setMsgDesc("Can't Delete!"); } return res; }
-	 */
-	/*
-	 * @GET
-	 * 
-	 * @Path("getUserList")
-	 * 
-	 * @Produces(MediaType.APPLICATION_JSON) public String getUserList() { String
-	 * searchVal = request.getParameter("searchVal"); int count = 1; count =
-	 * UserDataMgr.getUserCount(searchVal, getUser()); String json = "{\"count\":\""
-	 * + count + "\"}"; return json; }
-	 */
-
-	/*
-	 * @POST
-	 * 
-	 * @Path("browseAllUser")
-	 * 
-	 * @Produces(MediaType.APPLICATION_JSON)
-	 * 
-	 * @Consumes(MediaType.APPLICATION_JSON) public UserViewDataset
-	 * getUserlist(PagerData pager) { String searchVal =
-	 * request.getParameter("searchVal"); long status =
-	 * Long.parseLong(request.getParameter("status"));// for save String userid =
-	 * request.getParameter("userid"); UserViewDataset res = new UserViewDataset();
-	 * if (!ServerUtil.isUniEncoded(searchVal)) { // name searchVal =
-	 * FontChangeUtil.zg2uni(searchVal); } res =
-	 * UserDataMgr.searchUserbyValue(pager, searchVal, status, userid, getUser());
-	 * return res; }
-	 */
-
-	/*
-	 * @POST
-	 * 
-	 * @Path("getUserData")
-	 * 
-	 * @Produces(MediaType.APPLICATION_JSON)
-	 * 
-	 * @Consumes(MediaType.APPLICATION_JSON) public UserData
-	 * readUserDataBySyskey(String skey) { UserData res = new UserData(); skey =
-	 * skey.substring(1, skey.length() - 1); long syskey = Long.parseLong(skey);
-	 * long status = Long.parseLong(request.getParameter("status")); res =
-	 * UserDataMgr.readDataBySyskey(syskey, getUser(), status); return res; }
-	 */
-
-	/*
-	 * @GET
-	 * 
-	 * @Path("getUserRolelist")
-	 * 
-	 * @Produces(MediaType.APPLICATION_JSON)
-	 * 
-	 * @Consumes(MediaType.APPLICATION_JSON) public UserData getRolelist() {
-	 * UserRoleViewData[] dataarray; UserData res = new UserData(); long status =
-	 * Long.parseLong(request.getParameter("status"));// for save dataarray =
-	 * UserRoleViewDataMgr.getUserRoleList(status, getUser());
-	 * System.out.println("dataarray: " + dataarray);
-	 * res.setUserrolelist(dataarray); return res; }
-	 */
-	/*
-	 * @POST
-	 * 
-	 * @Path("saveRole")
-	 * 
-	 * @Consumes({ MediaType.APPLICATION_JSON })
-	 * 
-	 * @Produces(MediaType.APPLICATION_JSON) public Result saveRole(RoleData data) {
-	 * Result res = new Result(); res = RoleDataMgr.saveRoleData(data, getUser());
-	 * return res; }
-	 */
-
-	/*
-	 * @GET
-	 * 
-	 * @Path("deleteRole")
-	 * 
-	 * @Produces(MediaType.APPLICATION_JSON) public Result deleteRoleData() { Result
-	 * res = new Result(); long pKey =
-	 * Long.parseLong(request.getParameter("syskey")); try { res =
-	 * RoleDataMgr.deleteRoleData(pKey, getUser()); } catch (Exception e) {
-	 * res.setMsgDesc("Can't Delete!"); } return res; }
-	 */
-
-	/*
-	 * public Menu[] getProfileMainMenu(String[] promenu, MrBean m, String s1) {
-	 * Menu[] menus = new Menu[promenu.length]; Menu obj = new Menu(); if
-	 * (promenu.length == 1) menus = new Menu[promenu.length + 1]; for (int i = 0; i
-	 * < promenu.length; i++) { obj = new Menu(); obj.setMenuItem("");
-	 * obj.setCaption(promenu[i]); ValueCaptionData[] arr =
-	 * Service001Mgr.getSubMenuItem(m, s1, promenu[i]); Menu[] menuitems = new
-	 * Menu[arr.length]; menuitems = getProfileSubMenuItem(arr);
-	 * obj.setMenuItems(menuitems); menus[i] = obj; } return menus;
-	 * 
-	 * }
-	 */
-
-	/*
-	 * public Menu[] getProfileSubMenuItem(ValueCaptionData[] promenu) { Menu[]
-	 * items = new Menu[promenu.length]; Menu subobj = new Menu(); if
-	 * (promenu.length == 1) items = new Menu[promenu.length + 1]; for (int j = 0; j
-	 * < promenu.length; j++) { subobj = new Menu();
-	 * subobj.setMenuItem(promenu[j].getValue());
-	 * subobj.setCaption(promenu[j].getCaption()); items[j] = subobj; } return
-	 * items; }
-	 */
-	/*
-	 * public Menu[] getProfileRightMenu(MrBean m, String s1) { Menu[] right = new
-	 * Menu[2]; Menu obj = new Menu(); obj.setMenuItem("");
-	 * obj.setCaption("System"); ValueCaptionData[] arr =
-	 * Service001Mgr.getSubMenuItem(m, s1, "System"); Menu[] menuitems = new
-	 * Menu[arr.length]; menuitems = getProfileSubMenuItem(arr);
-	 * obj.setMenuItems(menuitems); right[0] = obj; obj = new Menu();
-	 * obj.setMenuItem("/login"); obj.setCaption("Sign Out"); right[1] = obj; return
-	 * right; }
-	 */
-
-	/*
-	 * @GET
-	 * 
-	 * @Path("getRoleList")
-	 * 
-	 * @Produces(MediaType.APPLICATION_JSON) public String getRoleList() { String
-	 * searchVal = request.getParameter("searchVal"); int count = 1; count =
-	 * RoleDataMgr.getRoleCount(searchVal, getUser()); String json = "{\"count\":\""
-	 * + count + "\"}"; return json; }
-	 */
-
-	/*
-	 * @POST
-	 * 
-	 * @Path("browseAllRole")
-	 * 
-	 * @Produces(MediaType.APPLICATION_JSON)
-	 * 
-	 * @Consumes(MediaType.APPLICATION_JSON) public RoleDataset
-	 * browseAllRole(PagerData pager) { String searchVal =
-	 * request.getParameter("searchVal"); long status =
-	 * Long.parseLong(request.getParameter("status"));// for save RoleDataset res =
-	 * new RoleDataset(); res = RoleDataMgr.searchRolebyValue(pager, searchVal,
-	 * status, getUser()); return res; }
-	 */
-
-	/*
-	 * // new methods for Role by YMK...
-	 * 
-	 * @GET
-	 * 
-	 * @Path("getRoleMenus")
-	 * 
-	 * @Produces(MediaType.APPLICATION_JSON) public RoleData getRoleMenus() throws
-	 * SQLException { RoleMenuData[] dataarray; RoleData res = new RoleData();
-	 * dataarray = RoleMenuDataMgr.getRoleMenuList(getUser());
-	 * res.setMenu(dataarray); return res; }
-	 */
-
-	/*
-	 * @GET
-	 * 
-	 * @Path("readRoleBySyskey")
-	 * 
-	 * @Produces(MediaType.APPLICATION_JSON) public RoleData readRoleDataBySyskey()
-	 * { RoleData ret; long pKey = Long.parseLong(request.getParameter("syskey"));
-	 * ret = RoleDataMgr.readRoleBySyskey(pKey, getUser()); return ret; }
-	 */
-
 	String request(String dir, String to, String msg) {
 		String ret = "0";
 		long ts = System.currentTimeMillis();
@@ -762,6 +586,7 @@ public class Service001 {
 	 * res = RegisterMgr.saveRegisterData(data, getUser()); return res; }
 	 */
 
+	/* Start Menu */
 	@GET
 	@Path("getMainMenuList")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -779,7 +604,6 @@ public class Service001 {
 		Result res = MenuDataMgr.saveMenuData(data, getUser());
 		return res;
 	}
-
 
 	@GET
 	@Path("getmenulist")
@@ -809,7 +633,7 @@ public class Service001 {
 		MenuData res = new MenuData();
 		String key = request.getParameter("syskey");
 		long syskey = 0;
-		if(key!=null) {
+		if (key != null) {
 			syskey = Long.parseLong(key);
 		}
 		res = MenuDataMgr.readDataBySyskey(syskey, getUser());
@@ -823,11 +647,14 @@ public class Service001 {
 	public Result deleteMenuData() {
 		String key = request.getParameter("syskey");
 		long syskey = 0;
-		if(key!=null) {
+		if (key != null) {
 			syskey = Long.parseLong(key);
 		}
 		Result res = MenuDataMgr.deleteMenuData(syskey, getUser());
 		return res;
 	}
 
+	/* End Menu */
+
+	
 }

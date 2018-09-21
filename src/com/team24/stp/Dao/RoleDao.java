@@ -10,19 +10,14 @@ import com.nirvasoft.database.DBField;
 import com.nirvasoft.database.DBMgr;
 import com.nirvasoft.database.DBRecord;
 import com.team24.stp.framework.Result;
-import com.team24.stp.shared.MenuData;
-import com.team24.stp.shared.MenuViewData;
-import com.team24.stp.shared.MenuViewDataset;
+import com.team24.stp.shared.RoleData;
+import com.team24.stp.shared.RoleDataset;
 import com.team24.stp.shared.ValueCaptionData;
 import com.team24.stp.shared.ValueCaptionDataSet;
 
-/**
- * @author Htet Wai Yan Lin
- *
- */
-public class MenuDao {
+public class RoleDao {
 
-	final static String Table_Name = "STPP_Menu";
+	final static String Table_Name = "STPP_Role";
 
 	public static DBRecord define() {
 		DBRecord ret = new DBRecord();
@@ -60,8 +55,8 @@ public class MenuDao {
 		return ret;
 	}
 
-	public static MenuData getDBRecord(DBRecord adbr) {
-		MenuData ret = new MenuData();
+	public static RoleData getDBRecord(DBRecord adbr) {
+		RoleData ret = new RoleData();
 		ret.setSyskey(adbr.getLong("syskey"));
 		ret.setCreateddate(adbr.getString("createddate"));
 		ret.setModifieddate(adbr.getString("modifieddate"));
@@ -91,7 +86,7 @@ public class MenuDao {
 		return ret;
 	}
 
-	public static DBRecord setDBRecord(MenuData data) {
+	public static DBRecord setDBRecord(RoleData data) {
 		DBRecord ret = define();
 		ret.setValue("syskey", data.getSyskey());
 		ret.setValue("createddate", data.getCreateddate());
@@ -122,25 +117,15 @@ public class MenuDao {
 		return ret;
 	}
 
-	public static MenuData read(long syskey, Connection conn) throws SQLException {
-		MenuData ret = new MenuData();
+	public static RoleData read(long syskey, Connection conn) throws SQLException {
+		RoleData ret = new RoleData();
 		ArrayList<DBRecord> dbrs = DBMgr.getDBRecords(define(), "WHERE recordstatus<>4 AND syskey=" + syskey, "", conn);
 		if (dbrs.size() > 0)
 			ret = getDBRecord(dbrs.get(0));
 		return ret;
 	}
 
-	public static boolean isMenu(MenuData obj, Connection conn) throws SQLException {
-		boolean flag = false;
-		if (obj.getN1() == 1) {
-			flag = isCodeExist(obj, conn);
-		} else if (obj.getN1() == 2) {
-			flag = isChildMenuExist(obj, conn);
-		}
-		return flag;
-	}
-
-	public static boolean isCodeExist(MenuData obj, Connection conn) throws SQLException {
+	public static boolean isCodeExist(RoleData obj, Connection conn) throws SQLException {
 		ArrayList<DBRecord> dbrs = DBMgr.getDBRecords(define(), " WHERE recordstatus<>4 AND syskey =" + obj.getSyskey(),
 				"", conn);
 		if (dbrs.size() > 0) {
@@ -150,7 +135,7 @@ public class MenuDao {
 		}
 	}
 
-	public static boolean isChildMenuExist(MenuData obj, Connection conn) throws SQLException {
+	public static boolean isChildMenuExist(RoleData obj, Connection conn) throws SQLException {
 		ArrayList<DBRecord> dbrs = DBMgr.getDBRecords(define(),
 				" WHERE RecordStatus<>4 AND  T1 LIKE '" + obj.getT1() + "' AND n2= " + obj.getN2(), "", conn);
 		if (dbrs.size() > 0) {
@@ -160,10 +145,10 @@ public class MenuDao {
 		}
 	}
 
-	public static Result insert(MenuData obj, Connection conn) throws SQLException {
+	public static Result insert(RoleData obj, Connection conn) throws SQLException {
 		Result res = new Result();
 
-		if (!isMenu(obj, conn)) {
+		if (!isCodeExist(obj, conn)) {
 			String sql = DBMgr.insertString(define(), conn);
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			DBRecord dbr = setDBRecord(obj);
@@ -174,14 +159,14 @@ public class MenuDao {
 			res.setKeyResult(obj.getSyskey());
 			return res;
 		} else {
-			res.setMsgDesc("Menu already exist!");
+			res.setMsgDesc("Role already exist!");
 			res.setState(false);
 			return res;
 		}
 
 	}
 
-	public static Result update(MenuData obj, Connection conn) throws SQLException {
+	public static Result update(RoleData obj, Connection conn) throws SQLException {
 		Result res = new Result();
 		String sql = DBMgr.updateString(" WHERE recordstatus <>4 AND Syskey=" + obj.getSyskey(), define(), conn);
 		PreparedStatement stmt = conn.prepareStatement(sql);
@@ -213,47 +198,10 @@ public class MenuDao {
 		return res;
 	}
 
-	public static ValueCaptionDataSet getmainmenulist(Connection conn) throws SQLException {
-		ValueCaptionDataSet result = new ValueCaptionDataSet();
-		ArrayList<ValueCaptionData> datalist = new ArrayList<ValueCaptionData>();
-
-		String sql = "SELECT syskey,t3 FROM " + Table_Name + " WHERE recordstatus<>4 AND n1=1 order by t3";
-		PreparedStatement stat = conn.prepareStatement(sql);
-		ResultSet res = stat.executeQuery();
-		while (res.next()) {
-			ValueCaptionData combo = new ValueCaptionData();
-			combo.setValue(String.valueOf(res.getLong("syskey")));
-			combo.setCaption(res.getString("t3"));
-			datalist.add(combo);
-		}
-		ValueCaptionData[] dataarry = new ValueCaptionData[datalist.size()];
-		for (int i = 0; i < datalist.size(); i++) {
-			dataarry[i] = datalist.get(i);
-		}
-		result.setData(dataarry);
-		return result;
-	}
-
-
-	public static int getMenuCount(String searchVal, Connection conn) throws SQLException {
-		String whereclause = " WHERE RecordStatus<>4 ";
-		if (!searchVal.equals("")) {
-
-			whereclause += "AND t1 LIKE '%" + searchVal + "%' OR t2 LIKE '%" + searchVal + "%' " + " OR syskey LIKE '%"
-					+ searchVal + "%'";
-		}
-		int res = 1;
-		PreparedStatement stat = conn.prepareStatement("SELECT COUNT(*) AS recCount FROM UVM022" + whereclause);
-		ResultSet result = stat.executeQuery();
-		result.next();
-		res = result.getInt("recCount");
-		return res;
-	}
-
-	public static MenuViewDataset searchMenu(String searchVal, String start, String end, String sort, String order,
+	public static RoleDataset searchRole(String searchVal, String start, String end, String sort, String order,
 			Connection conn) throws SQLException {
-		MenuViewDataset res = new MenuViewDataset();
-		ArrayList<MenuViewData> datalist = new ArrayList<MenuViewData>();
+		RoleDataset res = new RoleDataset();
+		ArrayList<RoleData> datalist = new ArrayList<RoleData>();
 
 		String whereclause = " WHERE recordstatus <> 4 ";
 		if (searchVal != null) {
@@ -263,13 +211,14 @@ public class MenuDao {
 			}
 		}
 
-		String sql = "SELECT * FROM ( SELECT ROW_NUMBER() OVER (ORDER BY t2 " + order + ") AS RowNum,* FROM " + Table_Name
-				+ whereclause + " ) AS RowConstrainedResult  WHERE RowNum >= " + start + "  and RowNum <= " + end;
+		String sql = "SELECT * FROM ( SELECT ROW_NUMBER() OVER (ORDER BY t2 " + order + " ) AS RowNum,* FROM "
+				+ Table_Name + whereclause + " ) AS RowConstrainedResult  WHERE RowNum >= " + start + "  and RowNum <= "
+				+ end;
 		PreparedStatement stmt = conn.prepareStatement(sql);
 		ResultSet rset = stmt.executeQuery();
 
 		while (rset.next()) {
-			MenuViewData ret = new MenuViewData();
+			RoleData ret = new RoleData();
 			ret.setSyskey(rset.getLong("syskey"));
 			ret.setT1(rset.getString("t1"));
 			ret.setT2(rset.getString("t2"));
@@ -289,25 +238,47 @@ public class MenuDao {
 		res.setTotalCount(result.getInt("recCount"));
 		// res.setPageSize(pager.getSize());
 		// res.setCurrentPage(pager.getCurrent());
-		MenuViewData[] dataarry = new MenuViewData[datalist.size()];
+		RoleData[] dataarry = new RoleData[datalist.size()];
 		dataarry = datalist.toArray(dataarry);
 		res.setData(dataarry);
 		return res;
 	}
-	
-	public static String getMenuCode(Connection aConn) {
+
+	public static String getRoleCode(Connection aConn) {
 		String ret = "";
 		try {
-			String sql = " SELECT 'M-'+RIGHT\r\n"
-					+ " ('00'+Cast(ISNULL((SUBSTRING(MAX(t1),3,5))+1,1) AS varchar),6) AS menucode  FROM " + Table_Name;
+			String sql = " SELECT 'R-'+RIGHT\r\n"
+					+ " ('00'+Cast(ISNULL((SUBSTRING(MAX(t1),3,5))+1,1) AS varchar),6) AS rolecode  FROM " + Table_Name;
 			PreparedStatement ps = aConn.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next())
-				ret = rs.getString("menucode");
+				ret = rs.getString("rolecode");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return ret;
 	}
 
+	public static ValueCaptionDataSet getRoleCombo(Connection conn) throws SQLException {
+		ValueCaptionDataSet result = new ValueCaptionDataSet();
+		ArrayList<ValueCaptionData> datalist = new ArrayList<ValueCaptionData>();
+
+		String sql = "SELECT syskey,t2 FROM " + Table_Name + " WHERE recordstatus<>4 order by t2";
+		PreparedStatement stat = conn.prepareStatement(sql);
+		ResultSet res = stat.executeQuery();
+		while (res.next()) {
+			ValueCaptionData combo = new ValueCaptionData();
+			combo.setValue(String.valueOf(res.getLong("syskey")));
+			combo.setCaption(res.getString("t2"));
+			datalist.add(combo);
+		}
+		ValueCaptionData[] dataarry = new ValueCaptionData[datalist.size()];
+		for (int i = 0; i < datalist.size(); i++) {
+			dataarry[i] = datalist.get(i);
+		}
+		result.setData(dataarry);
+		return result;
+	}
+	
+	
 }

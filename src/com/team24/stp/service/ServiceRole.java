@@ -1,5 +1,7 @@
 package com.team24.stp.service;
 
+import java.sql.SQLException;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,15 +13,18 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-import com.team24.stp.Mgr.UserMgr;
+import com.team24.stp.Mgr.RoleMgr;
 import com.team24.stp.framework.MrBean;
 import com.team24.stp.framework.Result;
 import com.team24.stp.framework.ServerSession;
-import com.team24.stp.shared.UserData;
-import com.team24.stp.shared.UserDataset;
+import com.team24.stp.shared.RoleData;
+import com.team24.stp.shared.RoleDataset;
+import com.team24.stp.shared.RoleMenuData;
+import com.team24.stp.shared.RoleParentMenuData;
+import com.team24.stp.shared.ValueCaptionDataSet;
 
-@Path("/serviceUser")
-public class ServiceUser {
+@Path("/serviceRole")
+public class ServiceRole {
 
 	@Context
 	HttpServletRequest request;
@@ -43,19 +48,49 @@ public class ServiceUser {
 	}
 
 	@POST
-	@Path("saveUser")
+	@Path("saveRole")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
-	public Result saveCompany(UserData data) {
-		Result res = UserMgr.saveUserData(data, getUser());
+	public Result saveRole(RoleData data) {
+		Result res = new Result();
+		res = RoleMgr.saveRoleData(data, getUser());
 		return res;
 	}
 
 	@GET
-	@Path("getUserlist")
+	@Path("deleteRole")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Result deleteRoleData() {
+		Result res = new Result();
+		long pKey = Long.parseLong(request.getParameter("syskey"));
+		try {
+			res = RoleMgr.deleteRoleData(pKey, getUser());
+		} catch (Exception e) {
+			res.setMsgDesc("Can't Delete!");
+		}
+		return res;
+	}
+
+	@GET
+	@Path("readRole")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public UserDataset getUserlist() {
+	public RoleData readURoleDataBySyskey() {
+		RoleData res = new RoleData();
+		String key = request.getParameter("syskey");
+		long syskey = 0;
+		if (key != null) {
+			syskey = Long.parseLong(key);
+		}
+		res = RoleMgr.readDataBySyskey(syskey, getUser());
+		return res;
+	}
+
+	@GET
+	@Path("getRolelist")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public RoleDataset getRolelist() {
 		String searchVal = request.getParameter("searchVal");
 		String page = request.getParameter("page");
 		String order = request.getParameter("order");
@@ -65,37 +100,28 @@ public class ServiceUser {
 		System.out.println("page  : " + page + "  order  : " + order + "  sort  :  " + sort);
 		System.out.println("start  :" + start);
 		System.out.println("end  :" + end);
-		UserDataset res = new UserDataset();
-		res = UserMgr.searchUserbyValue(searchVal, start, end, sort, order, getUser());
+		RoleDataset res = new RoleDataset();
+		res = RoleMgr.searchRolebyValue(searchVal, start, end, sort, order, getUser());
 		return res;
 	}
 
 	@GET
-	@Path("readUser")
+	@Path("getRoleCombo")
 	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public UserData readUserDataBySyskey() {
-		UserData res = new UserData();
-		String key = request.getParameter("syskey");
-		long syskey = 0;
-		if (key != null) {
-			syskey = Long.parseLong(key);
-		}
-		res = UserMgr.readDataBySyskey(syskey, getUser());
+	public ValueCaptionDataSet getRoleCombo() {
+		ValueCaptionDataSet res = new ValueCaptionDataSet();
+		res = RoleMgr.getRoleCombo(getUser());
 		return res;
 	}
 
 	@GET
-	@Path("deleteUser")
+	@Path("getRoleMenus")
 	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Result deleteUserData() {
-		String key = request.getParameter("syskey");
-		long syskey = 0;
-		if (key != null) {
-			syskey = Long.parseLong(key);
-		}
-		Result res = UserMgr.deleteUserData(syskey, getUser());
+	public RoleParentMenuData getRoleMenus() throws SQLException {
+		RoleMenuData[] dataarray;
+		RoleParentMenuData res = new RoleParentMenuData();
+		dataarray = RoleMgr.getRoleMenuList(getUser());
+		res.setMenu(dataarray);
 		return res;
 	}
 
