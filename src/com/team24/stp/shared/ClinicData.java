@@ -1,6 +1,5 @@
 package com.team24.stp.shared;
 
-import java.sql.Date;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -8,13 +7,14 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  */
 @XmlRootElement
-public class CompanyData {
+public class ClinicData {
+
 	private long syskey;
 	private long autokey;
-	private Date createddate;
-	private Date modifieddate;
-	private int recordstatus;
-	private long usersyskey;
+	private String created_date;
+	private String modified_date;
+	private int record_status;
+	private long user_syskey;
 	private String t1;
 	private String t2;
 	private String t3;
@@ -35,18 +35,18 @@ public class CompanyData {
 	private String t18;
 	private String t19;
 	private String t20;
-	private long n1;
-	private long n2;
-	private long n3;
-	private long n4;
-	private long n5;
-	private int n6;
-	private int n7;
-	private int n8;
-	private int n9;
-	private int n10;
+	private int n1;
+	private int n2;
+	private int n3;
+	private int n4;
+	private int n5;
+	private long n6;
+	private long n7;
+	private long n8;
+	private long n9;
+	private long n10;
 
-	public CompanyData() {
+	public ClinicData() {
 		clearProperties();
 	}
 
@@ -66,36 +66,36 @@ public class CompanyData {
 		this.autokey = autokey;
 	}
 
-	public Date getCreateddate() {
-		return createddate;
+	public String getCreated_date() {
+		return created_date;
 	}
 
-	public void setCreateddate(Date createddate) {
-		this.createddate = createddate;
+	public void setCreated_date(String created_date) {
+		this.created_date = created_date;
 	}
 
-	public Date getModifieddate() {
-		return modifieddate;
+	public String getModified_date() {
+		return modified_date;
 	}
 
-	public void setModifieddate(Date modifieddate) {
-		this.modifieddate = modifieddate;
+	public void setModified_date(String modified_date) {
+		this.modified_date = modified_date;
 	}
 
-	public int getRecordstatus() {
-		return recordstatus;
+	public int getRecord_status() {
+		return record_status;
 	}
 
-	public void setRecordstatus(int recordstatus) {
-		this.recordstatus = recordstatus;
+	public void setRecord_status(int record_status) {
+		this.record_status = record_status;
 	}
 
-	public long getUsersyskey() {
-		return usersyskey;
+	public long getUser_syskey() {
+		return user_syskey;
 	}
 
-	public void setUsersyskey(long usersyskey) {
-		this.usersyskey = usersyskey;
+	public void setUser_syskey(long user_syskey) {
+		this.user_syskey = user_syskey;
 	}
 
 	public String getT1() {
@@ -258,93 +258,93 @@ public class CompanyData {
 		this.t20 = t20;
 	}
 
-	public long getN1() {
+	public int getN1() {
 		return n1;
 	}
 
-	public void setN1(long n1) {
+	public void setN1(int n1) {
 		this.n1 = n1;
 	}
 
-	public long getN2() {
+	public int getN2() {
 		return n2;
 	}
 
-	public void setN2(long n2) {
+	public void setN2(int n2) {
 		this.n2 = n2;
 	}
 
-	public long getN3() {
+	public int getN3() {
 		return n3;
 	}
 
-	public void setN3(long n3) {
+	public void setN3(int n3) {
 		this.n3 = n3;
 	}
 
-	public long getN4() {
+	public int getN4() {
 		return n4;
 	}
 
-	public void setN4(long n4) {
+	public void setN4(int n4) {
 		this.n4 = n4;
 	}
 
-	public long getN5() {
+	public int getN5() {
 		return n5;
 	}
 
-	public void setN5(long n5) {
+	public void setN5(int n5) {
 		this.n5 = n5;
 	}
 
-	public int getN6() {
+	public long getN6() {
 		return n6;
 	}
 
-	public void setN6(int n6) {
+	public void setN6(long n6) {
 		this.n6 = n6;
 	}
 
-	public int getN7() {
+	public long getN7() {
 		return n7;
 	}
 
-	public void setN7(int n7) {
+	public void setN7(long n7) {
 		this.n7 = n7;
 	}
 
-	public int getN8() {
+	public long getN8() {
 		return n8;
 	}
 
-	public void setN8(int n8) {
+	public void setN8(long n8) {
 		this.n8 = n8;
 	}
 
-	public int getN9() {
+	public long getN9() {
 		return n9;
 	}
 
-	public void setN9(int n9) {
+	public void setN9(long n9) {
 		this.n9 = n9;
 	}
 
-	public int getN10() {
+	public long getN10() {
 		return n10;
 	}
 
-	public void setN10(int n10) {
+	public void setN10(long n10) {
 		this.n10 = n10;
 	}
 
 	protected void clearProperties() {
 		this.syskey = 0;
 		this.autokey = 0;
-		this.createddate = new Date(new java.util.Date().getTime());
-		this.modifieddate = new Date(new java.util.Date().getTime());
-		this.recordstatus = 0;
-		this.usersyskey = 0;
+		this.created_date = "";
+		this.modified_date = "";
+		this.record_status = 0;
+		this.user_syskey = 0;
 		this.t1 = "";
 		this.t2 = "";
 		this.t3 = "";

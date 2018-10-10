@@ -1,7 +1,5 @@
 package com.team24.stp.service;
 
-import java.sql.SQLException;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,18 +11,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-import com.team24.stp.Mgr.RoleMgr;
-import com.team24.stp.Mgr.UserMgr;
+import com.team24.stp.Mgr.ClinicMgr;
 import com.team24.stp.framework.MrBean;
 import com.team24.stp.framework.Result;
 import com.team24.stp.framework.ServerSession;
-import com.team24.stp.shared.RoleMenuData;
-import com.team24.stp.shared.RoleParentMenuData;
-import com.team24.stp.shared.UserData;
-import com.team24.stp.shared.UserDataset;
+import com.team24.stp.shared.ClinicData;
+import com.team24.stp.shared.ClinicDataset;
+import com.team24.stp.shared.ValueCaptionDataSet;
 
-@Path("/serviceUser")
-public class ServiceUser {
+@Path("/serviceClinic")
+public class ServiceClinic {
 
 	@Context
 	HttpServletRequest request;
@@ -36,7 +32,8 @@ public class ServiceUser {
 	public static String userid = "";
 	public static String username = "";
 	public static String userpsw = "";
-
+	
+	
 	private MrBean getUser() {
 		ServerSession.serverPath = request.getServletContext().getRealPath("/") + "/";
 		MrBean user = new MrBean();
@@ -46,21 +43,22 @@ public class ServiceUser {
 		user.getUser().setPassword(userpsw);
 		return user;
 	}
-
+	
 	@POST
-	@Path("saveUser")
+	@Path("saveClinic")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
-	public Result saveCompany(UserData data) {
-		Result res = UserMgr.saveUserData(data, getUser());
+	public Result saveClinic(ClinicData data) {
+		Result res = ClinicMgr.saveClinicData(data, getUser());
 		return res;
 	}
 
+
 	@GET
-	@Path("getUserlist")
+	@Path("getCliniclist")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public UserDataset getUserlist() {
+	public ClinicDataset getCliniclist() {
 		String searchVal = request.getParameter("searchVal");
 		String page = request.getParameter("page");
 		String order = request.getParameter("order");
@@ -70,49 +68,51 @@ public class ServiceUser {
 		System.out.println("page  : " + page + "  order  : " + order + "  sort  :  " + sort);
 		System.out.println("start  :" + start);
 		System.out.println("end  :" + end);
-		UserDataset res = new UserDataset();
-		res = UserMgr.searchUserbyValue(searchVal, start, end, sort, order, getUser());
+		ClinicDataset res = new ClinicDataset();
+		res = ClinicMgr.searchClinicbyValue(searchVal, start, end, sort, order, getUser());
 		return res;
 	}
 
 	@GET
-	@Path("readUser")
+	@Path("readClinic")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public UserData readUserDataBySyskey() {
-		UserData res = new UserData();
+	public ClinicData readClinicDataBySyskey() {
+		ClinicData res = new ClinicData();
 		String key = request.getParameter("syskey");
 		long syskey = 0;
-		if (key != null) {
+		if(key!=null) {
 			syskey = Long.parseLong(key);
 		}
-		res = UserMgr.readDataBySyskey(syskey, getUser());
+		res = ClinicMgr.readDataBySyskey(syskey, getUser());
 		return res;
 	}
 
 	@GET
-	@Path("deleteUser")
+	@Path("deleteClinic")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Result deleteUserData() {
+	public Result deleteClinicData() {
 		String key = request.getParameter("syskey");
 		long syskey = 0;
-		if (key != null) {
+		if(key!=null) {
 			syskey = Long.parseLong(key);
 		}
-		Result res = UserMgr.deleteUserData(syskey, getUser());
+		Result res = ClinicMgr.deleteClinicData(syskey, getUser());
 		return res;
 	}
 	
+	
 	@GET
-	@Path("getRole")
+	@Path("getClinicName")
 	@Produces(MediaType.APPLICATION_JSON)
-	public RoleParentMenuData getRole() throws SQLException {
-		RoleMenuData[] dataarray;
-		RoleParentMenuData res = new RoleParentMenuData();
-		dataarray = RoleMgr.getRoleMenuList(getUser());
-		res.setMenu(dataarray);
+	public ValueCaptionDataSet getClinicName() {
+		ValueCaptionDataSet res = new ValueCaptionDataSet();
+		res = ClinicMgr.getClinicName(getUser());
 		return res;
 	}
+
+
+	
 
 }

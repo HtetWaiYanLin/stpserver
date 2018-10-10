@@ -37,8 +37,8 @@ import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 import com.team24.stp.framework.Result;
 import com.team24.stp.shared.FileUploadResponseData;
-import com.team24.stp.shared.RegisterData;
 import com.team24.stp.shared.UploadData;
+import com.team24.stp.shared.UserData;
 import com.team24.stp.util.ServerUtil;
 
 @Path("/file")
@@ -423,15 +423,14 @@ public class FileUpload {
 	@Path("/uploadProfile")
 	@Consumes(MediaType.MULTIPART_FORM_DATA + ";charset=utf-8")
 	@Produces(MediaType.APPLICATION_JSON)
-	public RegisterData uploadProfile() {
+	public UserData uploadProfile() {
 		Result res = new Result();
-		RegisterData data = new RegisterData();
+		UserData data = new UserData();
 		String inputFileName = "";
 		String filePath = "upload";
 		String outputFileName = "";
 		String userid = "";
 		String mobile = "";
-		String username = "";
 		try {
 			FileItemFactory factory = new DiskFileItemFactory();
 			ServletFileUpload upload = new ServletFileUpload(factory);
@@ -449,7 +448,7 @@ public class FileUpload {
 					} else if (i == 2) {
 						mobile = item.getString();
 					} else if (i == 3) {
-						username = item.getString();
+						// username = item.getString();
 					}
 					i++;
 
@@ -482,13 +481,8 @@ public class FileUpload {
 					if (l_file.createNewFile()) {
 						item.write(l_file);
 						String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
-						data.setUserid(mobile);
 						data.setT1(mobile);
-						data.setUsername(username);
 						data.setT16(outputFileName);
-						data.setRecordStatus(1);
-						data.setSyncStatus(1);
-						data.setSyncBatch(0);
 						data.setModifieddate(todayDate);
 						// res = RegisterDao.UpdateImageUpload(data, getUser());
 						if (res.isState()) {

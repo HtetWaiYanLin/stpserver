@@ -5,25 +5,24 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
 import com.nirvasoft.database.SysKeyMgr;
-import com.team24.stp.Dao.CompanyDao;
+import com.team24.stp.Dao.ClinicDao;
 import com.team24.stp.framework.ConnAdmin;
 import com.team24.stp.framework.MrBean;
 import com.team24.stp.framework.Result;
-import com.team24.stp.shared.CompanyData;
-import com.team24.stp.shared.CompanyDataset;
+import com.team24.stp.shared.ClinicData;
+import com.team24.stp.shared.ClinicDataset;
 import com.team24.stp.shared.MenuRole;
 import com.team24.stp.shared.ValueCaptionDataSet;
 import com.team24.stp.util.ServerUtil;
 
-public class CompanyMgr {
-	
-	public static Result saveCompanyData(CompanyData data, MrBean user) {
+public class ClinicMgr {
+
+	public static Result saveClinicData(ClinicData data, MrBean user) {
 		Result res = new Result();
 		Connection conn = ConnAdmin.getConn(user.getUser().getOrganizationID());
 		try {
-			res = saveCompanyData(data, user, conn);
+			res = saveClinicData(data, user, conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -32,21 +31,21 @@ public class CompanyMgr {
 		return res;
 	}
 
-	public static Result saveCompanyData(CompanyData data, MrBean user, Connection conn) throws SQLException {
+	public static Result saveClinicData(ClinicData data, MrBean user, Connection conn) throws SQLException {
 		Result res = new Result();
 		data = initData(data, user, conn);
 		if (data.getSyskey() == 0) {
 			data.setSyskey(SysKeyMgr.getSysKey(1, "syskey", ConnAdmin.getConn(user.getUser().getOrganizationID())));
-			res = CompanyDao.insert(data, conn);
+			res = ClinicDao.insert(data, conn);
 		} else {
-			res = CompanyDao.update(data, conn);
+			res = ClinicDao.update(data, conn);
 		}
 		if (res.isState()) {
 		}
 		return res;
 	}
 
-	public static MenuRole initMenuRoleData(MenuRole mr, CompanyData data, MrBean user, Connection con) {
+	public static MenuRole initMenuRoleData(MenuRole mr, ClinicData data, MrBean user, Connection con) {
 
 		String date23 = new SimpleDateFormat("yyyyMMdd").format(new Date());
 		mr.setUserId(user.getUser().getUserId());
@@ -63,22 +62,23 @@ public class CompanyMgr {
 		return mr;
 	}
 
-	public static CompanyData initData(CompanyData data, MrBean user, Connection con) {
-		data.setModifieddate(new java.sql.Date(new Date().getTime()));
+	public static ClinicData initData(ClinicData data, MrBean user, Connection con) {
+		String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
+		data.setModified_date(date);
 		if (data.getSyskey() == 0) {
-			String id = CompanyDao.getCompanyID(con);
+			String id = ClinicDao.getClinicId(con);
 			data.setT1(id);
-			data.setCreateddate(new java.sql.Date(new Date().getTime()));
-			data.setRecordstatus(1);
+			data.setCreated_date(date);
+			data.setRecord_status(1);
 		}
 		return data;
 	}
 
-	public static CompanyData readDataBySyskey(long pKey, MrBean user) {
-		CompanyData res = new CompanyData();
+	public static ClinicData readDataBySyskey(long pKey, MrBean user) {
+		ClinicData res = new ClinicData();
 		Connection conn = ConnAdmin.getConn(user.getUser().getOrganizationID());
 		try {
-			res = CompanyDao.read(pKey, conn);
+			res = ClinicDao.read(pKey, conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -86,52 +86,37 @@ public class CompanyMgr {
 		return res;
 	}
 
-	public static Result deleteCompanyData(long syskey, MrBean user) {
+	public static Result deleteClinicData(long syskey, MrBean user) {
 		Result res = new Result();
 		Connection conn = ConnAdmin.getConn(user.getUser().getOrganizationID());
 		try {
-			res = CompanyDao.delete(syskey, conn);
+			res = ClinicDao.delete(syskey, conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return res;
 	}
 
-	public static int getMenuCount(String searchVal, MrBean user) {
-
-		Connection conn = ConnAdmin.getConn(user.getUser().getOrganizationID());
-		int res = 0;
-		try {
-			res = CompanyDao.getMenuCount(searchVal, conn);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return res;
-	}
-
-	public static CompanyDataset searchCompanybyValue(String searchVal, String start, String end, String sort,
+	public static ClinicDataset searchClinicbyValue(String searchVal, String start, String end, String sort,
 			String order, MrBean user) {
 		Connection conn = ConnAdmin.getConn(user.getUser().getOrganizationID());
-		CompanyDataset res = new CompanyDataset();
+		ClinicDataset res = new ClinicDataset();
 		try {
-			res = CompanyDao.searchCompany(searchVal, start, end, sort, order, conn);
+			res = ClinicDao.searchClinic(searchVal, start, end, sort, order, conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return res;
 	}
 
-
-	
-	public static ValueCaptionDataSet getCompanyName(MrBean user) {
+	public static ValueCaptionDataSet getClinicName(MrBean user) {
 		Connection conn = ConnAdmin.getConn(user.getUser().getOrganizationID());
 		ValueCaptionDataSet res = new ValueCaptionDataSet();
 		try {
-			res = CompanyDao.getCompanyName(conn);
+			res = ClinicDao.getClinicName(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return res;
 	}
-
 }

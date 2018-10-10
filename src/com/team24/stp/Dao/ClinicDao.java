@@ -6,27 +6,28 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import com.team24.stp.database.DBField;
-import com.team24.stp.database.DBMgr;
-import com.team24.stp.database.DBRecord;
+import com.nirvasoft.database.DBField;
+import com.nirvasoft.database.DBMgr;
+import com.nirvasoft.database.DBRecord;
 import com.team24.stp.framework.Result;
-import com.team24.stp.shared.CompanyData;
-import com.team24.stp.shared.CompanyDataset;
+import com.team24.stp.shared.ClinicData;
+import com.team24.stp.shared.ClinicDataset;
 import com.team24.stp.shared.ValueCaptionData;
 import com.team24.stp.shared.ValueCaptionDataSet;
 
-public class CompanyDao {
-	final static String Table_Name = "STPP_Company";
+public class ClinicDao {
+
+	final static String Table_Name = "STPP_Clinic";
 
 	public static DBRecord define() {
 		DBRecord ret = new DBRecord();
 		ret.setTableName(Table_Name);
 		ret.setFields(new ArrayList<DBField>());
 		ret.getFields().add(new DBField("syskey", (byte) 2));
-		ret.getFields().add(new DBField("createddate", (byte) 6));
-		ret.getFields().add(new DBField("modifieddate", (byte) 6));
-		ret.getFields().add(new DBField("recordstatus", (byte) 1));
-		ret.getFields().add(new DBField("usersyskey", (byte) 2));
+		ret.getFields().add(new DBField("created_date", (byte) 5));
+		ret.getFields().add(new DBField("modified_date", (byte) 5));
+		ret.getFields().add(new DBField("record_status", (byte) 1));
+		ret.getFields().add(new DBField("user_syskey", (byte) 2));
 		ret.getFields().add(new DBField("t1", (byte) 5));
 		ret.getFields().add(new DBField("t2", (byte) 5));
 		ret.getFields().add(new DBField("t3", (byte) 5));
@@ -47,26 +48,26 @@ public class CompanyDao {
 		ret.getFields().add(new DBField("t18", (byte) 5));
 		ret.getFields().add(new DBField("t19", (byte) 5));
 		ret.getFields().add(new DBField("t20", (byte) 5));
-		ret.getFields().add(new DBField("n1", (byte) 2));
-		ret.getFields().add(new DBField("n2", (byte) 2));
-		ret.getFields().add(new DBField("n3", (byte) 2));
-		ret.getFields().add(new DBField("n4", (byte) 2));
-		ret.getFields().add(new DBField("n5", (byte) 2));
-		ret.getFields().add(new DBField("n6", (byte) 1));
-		ret.getFields().add(new DBField("n7", (byte) 1));
-		ret.getFields().add(new DBField("n8", (byte) 1));
-		ret.getFields().add(new DBField("n9", (byte) 1));
-		ret.getFields().add(new DBField("n10", (byte) 1));
+		ret.getFields().add(new DBField("n1", (byte) 1));
+		ret.getFields().add(new DBField("n2", (byte) 1));
+		ret.getFields().add(new DBField("n3", (byte) 1));
+		ret.getFields().add(new DBField("n4", (byte) 1));
+		ret.getFields().add(new DBField("n5", (byte) 1));
+		ret.getFields().add(new DBField("n6", (byte) 2));
+		ret.getFields().add(new DBField("n7", (byte) 21));
+		ret.getFields().add(new DBField("n8", (byte) 2));
+		ret.getFields().add(new DBField("n9", (byte) 2));
+		ret.getFields().add(new DBField("n10", (byte) 2));
 		return ret;
 	}
 
-	public static CompanyData getDBRecord(DBRecord adbr) {
-		CompanyData ret = new CompanyData();
+	public static ClinicData getDBRecord(DBRecord adbr) {
+		ClinicData ret = new ClinicData();
 		ret.setSyskey(adbr.getLong("syskey"));
-		ret.setCreateddate(adbr.getDate("createddate"));
-		ret.setModifieddate(adbr.getDate("modifieddate"));
-		ret.setRecordstatus(adbr.getInt("recordstatus"));
-		ret.setUsersyskey(adbr.getLong("usersysKey"));
+		ret.setCreated_date(adbr.getString("created_date"));
+		ret.setModified_date(adbr.getString("modified_date"));
+		ret.setRecord_status(adbr.getInt("record_status"));
+		ret.setUser_syskey(adbr.getLong("user_syskey"));
 		ret.setT1(adbr.getString("t1"));
 		ret.setT2(adbr.getString("t2"));
 		ret.setT3(adbr.getString("t3"));
@@ -87,27 +88,27 @@ public class CompanyDao {
 		ret.setT18(adbr.getString("t18"));
 		ret.setT19(adbr.getString("t19"));
 		ret.setT20(adbr.getString("t20"));
-		ret.setN1(adbr.getLong("n1"));
-		ret.setN2(adbr.getLong("n2"));
-		ret.setN3(adbr.getLong("n3"));
-		ret.setN4(adbr.getLong("n4"));
-		ret.setN5(adbr.getLong("n5"));
-		ret.setN6(adbr.getInt("n6"));
-		ret.setN7(adbr.getInt("n7"));
-		ret.setN8(adbr.getInt("n8"));
-		ret.setN9(adbr.getInt("n9"));
-		ret.setN10(adbr.getInt("n10"));
+		ret.setN1(adbr.getInt("n1"));
+		ret.setN2(adbr.getInt("n2"));
+		ret.setN3(adbr.getInt("n3"));
+		ret.setN4(adbr.getInt("n4"));
+		ret.setN5(adbr.getInt("n5"));
+		ret.setN6(adbr.getLong("n6"));
+		ret.setN7(adbr.getLong("n7"));
+		ret.setN8(adbr.getLong("n8"));
+		ret.setN9(adbr.getLong("n9"));
+		ret.setN10(adbr.getLong("n10"));
 
 		return ret;
 	}
 
-	public static DBRecord setDBRecord(CompanyData data) {
+	public static DBRecord setDBRecord(ClinicData data) {
 		DBRecord ret = define();
 		ret.setValue("syskey", data.getSyskey());
-		ret.setValue("createddate", data.getCreateddate());
-		ret.setValue("modifieddate", data.getModifieddate());
-		ret.setValue("recordstatus", data.getRecordstatus());
-		ret.setValue("usersysKey", data.getUsersyskey());
+		ret.setValue("createddate", data.getCreated_date());
+		ret.setValue("modifieddate", data.getModified_date());
+		ret.setValue("recordstatus", data.getRecord_status());
+		ret.setValue("usersysKey", data.getUser_syskey());
 		ret.setValue("t1", data.getT1());
 		ret.setValue("t2", data.getT2());
 		ret.setValue("t3", data.getT3());
@@ -142,25 +143,15 @@ public class CompanyDao {
 		return ret;
 	}
 
-	public static CompanyData read(long syskey, Connection conn) throws SQLException {
-		CompanyData ret = new CompanyData();
+	public static ClinicData read(long syskey, Connection conn) throws SQLException {
+		ClinicData ret = new ClinicData();
 		ArrayList<DBRecord> dbrs = DBMgr.getDBRecords(define(), "WHERE recordstatus<>4 AND syskey=" + syskey, "", conn);
 		if (dbrs.size() > 0)
 			ret = getDBRecord(dbrs.get(0));
 		return ret;
 	}
 
-	public static boolean isMenu(CompanyData obj, Connection conn) throws SQLException {
-		boolean flag = false;
-		if (obj.getN1() == 1) {
-			flag = isCodeExist(obj, conn);
-		} else if (obj.getN1() == 2) {
-			flag = isChildMenuExist(obj, conn);
-		}
-		return flag;
-	}
-
-	public static boolean isCodeExist(CompanyData obj, Connection conn) throws SQLException {
+	public static boolean isCodeExist(ClinicData obj, Connection conn) throws SQLException {
 		ArrayList<DBRecord> dbrs = DBMgr.getDBRecords(define(), " WHERE recordstatus<>4 AND syskey =" + obj.getSyskey(),
 				"", conn);
 		if (dbrs.size() > 0) {
@@ -170,22 +161,11 @@ public class CompanyDao {
 		}
 	}
 
-	public static boolean isChildMenuExist(CompanyData obj, Connection conn) throws SQLException {
-		ArrayList<DBRecord> dbrs = DBMgr.getDBRecords(define(),
-				" WHERE RecordStatus<>4 AND  T1 LIKE '" + obj.getT1() + "' AND n2= " + obj.getN2(), "", conn);
-		if (dbrs.size() > 0) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public static Result insert(CompanyData obj, Connection conn) throws SQLException {
+	public static Result insert(ClinicData obj, Connection conn) throws SQLException {
 		Result res = new Result();
 
-		if (!isMenu(obj, conn)) {
+		if (!isCodeExist(obj, conn)) {
 			String sql = DBMgr.insertString(define(), conn);
-			System.out.println(sql);
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			DBRecord dbr = setDBRecord(obj);
 			DBMgr.setValues(stmt, dbr);
@@ -195,14 +175,14 @@ public class CompanyDao {
 			res.setState(true);
 			return res;
 		} else {
-			res.setMsgDesc("Menu already exist!");
+			res.setMsgDesc("Clinic already exist!");
 			res.setState(false);
 			return res;
 		}
 
 	}
 
-	public static Result update(CompanyData obj, Connection conn) throws SQLException {
+	public static Result update(ClinicData obj, Connection conn) throws SQLException {
 		Result res = new Result();
 		String sql = DBMgr.updateString(" WHERE recordstatus <>4 AND Syskey=" + obj.getSyskey(), define(), conn);
 		PreparedStatement stmt = conn.prepareStatement(sql);
@@ -233,25 +213,10 @@ public class CompanyDao {
 		return res;
 	}
 
-	public static int getMenuCount(String searchVal, Connection conn) throws SQLException {
-		String whereclause = " WHERE RecordStatus<>4 ";
-		if (!searchVal.equals("")) {
-
-			whereclause += "AND t1 LIKE '%" + searchVal + "%' OR t2 LIKE '%" + searchVal + "%' " + " OR syskey LIKE '%"
-					+ searchVal + "%'";
-		}
-		int res = 1;
-		PreparedStatement stat = conn.prepareStatement("SELECT COUNT(*) AS recCount FROM UVM022" + whereclause);
-		ResultSet result = stat.executeQuery();
-		result.next();
-		res = result.getInt("recCount");
-		return res;
-	}
-
-	public static CompanyDataset searchCompany(String searchVal, String start, String end, String sort, String order,
+	public static ClinicDataset searchClinic(String searchVal, String start, String end, String sort, String order,
 			Connection conn) throws SQLException {
-		CompanyDataset res = new CompanyDataset();
-		ArrayList<CompanyData> datalist = new ArrayList<CompanyData>();
+		ClinicDataset res = new ClinicDataset();
+		ArrayList<ClinicData> datalist = new ArrayList<ClinicData>();
 
 		String whereclause = " WHERE recordstatus <> 4 ";
 		if (searchVal != null) {
@@ -267,7 +232,7 @@ public class CompanyDao {
 		ResultSet rset = stmt.executeQuery();
 
 		while (rset.next()) {
-			CompanyData ret = new CompanyData();
+			ClinicData ret = new ClinicData();
 			ret.setSyskey(rset.getLong("syskey"));
 			ret.setT1(rset.getString("t1"));
 			ret.setT2(rset.getString("t2"));
@@ -276,24 +241,21 @@ public class CompanyDao {
 			ret.setN2(rset.getInt("n2"));
 			datalist.add(ret);
 		}
-		if (datalist.size() > 0) {
-			res.setState(true);
-		} else {
-			res.setState(false);
-		}
+
 		PreparedStatement stat = conn.prepareStatement("SELECT COUNT(*) AS recCount FROM " + Table_Name + whereclause);
 		ResultSet result = stat.executeQuery();
 		result.next();
 		res.setTotalCount(result.getInt("recCount"));
 		// res.setPageSize(pager.getSize());
 		// res.setCurrentPage(pager.getCurrent());
-		CompanyData[] dataarry = new CompanyData[datalist.size()];
-		dataarry = datalist.toArray(dataarry);
-		res.setData(dataarry);
+		// ClinicData[] dataarry = new ClinicData[datalist.size()];
+		// dataarry = datalist.toArray(dataarry);
+		// res.add(dataarry);
+		res.setData(datalist);
 		return res;
 	}
-	
-	public static ValueCaptionDataSet getCompanyName(Connection conn) throws SQLException {
+
+	public static ValueCaptionDataSet getClinicName(Connection conn) throws SQLException {
 		ValueCaptionDataSet result = new ValueCaptionDataSet();
 		ArrayList<ValueCaptionData> datalist = new ArrayList<ValueCaptionData>();
 
@@ -314,10 +276,10 @@ public class CompanyDao {
 		return result;
 	}
 
-	public static String getCompanyID(Connection aConn) {
+	public static String getClinicId(Connection aConn) {
 		String ret = "";
 		try {
-			String sql = " SELECT 'I-'+RIGHT\r\n"
+			String sql = " SELECT 'C-'+RIGHT\r\n"
 					+ " ('00'+Cast(ISNULL((SUBSTRING(MAX(t1),3,5))+1,1) AS varchar),6) AS id  FROM " + Table_Name;
 			PreparedStatement ps = aConn.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();

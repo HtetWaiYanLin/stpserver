@@ -2,8 +2,6 @@ package com.team24.stp.framework;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.team24.stp.shared.InternalUserData;
-
 @XmlRootElement
 public class MrBean {
 	private InternalUserData user;
@@ -13,7 +11,6 @@ public class MrBean {
 
 	public MrBean() {
 		this.user = new InternalUserData();
-
 		this.message = "";
 		this.status = false;
 	}
