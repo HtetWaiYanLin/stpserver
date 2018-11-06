@@ -6,14 +6,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import com.nirvasoft.database.DBField;
-import com.nirvasoft.database.DBMgr;
-import com.nirvasoft.database.DBRecord;
+import com.team24.stp.database.DBField;
+import com.team24.stp.database.DBMgr;
+import com.team24.stp.database.DBRecord;
 import com.team24.stp.framework.Result;
 import com.team24.stp.shared.AddressRefData;
 import com.team24.stp.shared.AddressRefDataSet;
-import com.team24.stp.shared.AdvancedSearchData;
-import com.team24.stp.shared.PagerData;
 import com.team24.stp.shared.Ref1;
 
 public class AddressDao {
@@ -89,7 +87,7 @@ public class AddressDao {
 		}
 		arr = new Ref1[count];
 
-		l_Query = "select Code ,DespEng from dbo.AddressRef where SUBSTRING(code,3,6) = '000000' and code<>'00000000' order by code ";
+		l_Query = "select Code ,despMyan from dbo.AddressRef where SUBSTRING(code,3,6) = '000000' and code<>'00000000' order by code ";
 
 		pstmt = aConnection.prepareStatement(l_Query);
 		rs = pstmt.executeQuery();
@@ -98,7 +96,7 @@ public class AddressDao {
 		while (rs.next()) {
 			ref = new Ref1();
 			ref.setValue(rs.getString("Code"));
-			ref.setCaption(rs.getString("DespEng"));
+			ref.setCaption(rs.getString("despMyan"));
 			arr[index] = ref;
 			index++;
 		}
@@ -120,7 +118,7 @@ public class AddressDao {
 			pstmt.close();
 		}
 		arr = new Ref1[count];
-		l_Query = "select Code ,DespEng from dbo.AddressRef "
+		l_Query = "select Code ,despMyan from dbo.AddressRef "
 				+ " where SUBSTRING(code,1,2) = ? and SUBSTRING(code,3,3) <> '000' and "
 				+ " SUBSTRING(code,6,3) = '000' order by code ";
 
@@ -132,7 +130,39 @@ public class AddressDao {
 		while (rs.next()) {
 			ref = new Ref1();
 			ref.setValue(rs.getString("Code"));
-			ref.setCaption(rs.getString("DespEng"));
+			ref.setCaption(rs.getString("despMyan"));
+			arr[index] = ref;
+			index++;
+		}
+		return arr;
+	}
+	
+	public static Ref1[] getAllDistrict(Connection l_Conn) throws SQLException {
+		Ref1[] arr = null;
+		Ref1 ref = new Ref1();
+		int count = 0;
+		String l_Query = "select COUNT(*) c from dbo.AddressRef "
+				+ " where SUBSTRING(code,3,3) <> '000' and "
+				+ " SUBSTRING(code,6,3) = '000'";
+		PreparedStatement pstmt = l_Conn.prepareStatement(l_Query);
+		ResultSet rs = pstmt.executeQuery();
+		if (rs.next()) {
+			count = rs.getInt("c");
+			pstmt.close();
+		}
+		arr = new Ref1[count];
+		l_Query = "select Code ,despMyan from dbo.AddressRef "
+				+ " where  SUBSTRING(code,3,3) <> '000' and "
+				+ " SUBSTRING(code,6,3) = '000' order by code ";
+
+		pstmt = l_Conn.prepareStatement(l_Query);
+		rs = pstmt.executeQuery();
+
+		int index = 0;
+		while (rs.next()) {
+			ref = new Ref1();
+			ref.setValue(rs.getString("Code"));
+			ref.setCaption(rs.getString("despMyan"));
 			arr[index] = ref;
 			index++;
 		}
@@ -143,12 +173,12 @@ public class AddressDao {
 		Ref1[] arr = null;
 		Ref1 ref = new Ref1();
 		int count = 0;
-		int div = 0;
+		/*int div = 0;
 		if (distinct == null || distinct.trim().equals("")) {
 			div = 0;
 		} else {
 			div = Integer.parseInt(distinct);
-		}
+		}*/
 		String l_Query = "select COUNT(*) c from dbo.AddressRef " + " where SUBSTRING(code,1,5) = ? and  "
 				+ " SUBSTRING(code,6,3) <> '000' ";
 		PreparedStatement pstmt = l_Conn.prepareStatement(l_Query);
@@ -162,7 +192,7 @@ public class AddressDao {
 
 		arr = new Ref1[count];
 
-		l_Query = "select Code ,DespEng from dbo.AddressRef " + " where SUBSTRING(code,1,5) = ? and  "
+		l_Query = "select Code ,despMyan from dbo.AddressRef " + " where SUBSTRING(code,1,5) = ? and  "
 				+ " SUBSTRING(code,6,3) <> '000' order by code ";
 		pstmt = l_Conn.prepareStatement(l_Query);
 		pstmt.setString(1, distinct.substring(0, 5));
@@ -172,13 +202,46 @@ public class AddressDao {
 		while (rs.next()) {
 			ref = new Ref1();
 			ref.setValue(rs.getString("Code"));
-			ref.setCaption(rs.getString("DespEng"));
+			ref.setCaption(rs.getString("despMyan"));
 			arr[index] = ref;
 			index++;
 		}
 		return arr;
 	}
 
+	public static Ref1[] getAllTownship(Connection l_Conn) throws SQLException {
+		Ref1[] arr = null;
+		Ref1 ref = new Ref1();
+		int count = 0;
+		String l_Query = "select COUNT(*) c from dbo.AddressRef where "
+				+ " SUBSTRING(code,6,3) <> '000' ";
+		PreparedStatement pstmt = l_Conn.prepareStatement(l_Query);
+		ResultSet rs = pstmt.executeQuery();
+
+		if (rs.next()) {
+			count = rs.getInt("c");
+			pstmt.close();
+		}
+
+		arr = new Ref1[count];
+
+		l_Query = "select Code ,despMyan from dbo.AddressRef where "
+				+ " SUBSTRING(code,6,3) <> '000' order by code ";
+		pstmt = l_Conn.prepareStatement(l_Query);
+		rs = pstmt.executeQuery();
+
+		int index = 0;
+		while (rs.next()) {
+			ref = new Ref1();
+			ref.setValue(rs.getString("Code"));
+			ref.setCaption(rs.getString("despMyan"));
+			arr[index] = ref;
+			index++;
+		}
+		return arr;
+	}
+	
+	
 	public static String getNewwardCode(String township, Connection aConn) {
 		String ret = new String();
 		String l_Key = "";
@@ -278,13 +341,13 @@ public class AddressDao {
 		}
 	}
 
-	public static AddressRefDataSet search(AdvancedSearchData asdata, String searchVal, String sort, String type,
+	public static AddressRefDataSet search(String searchVal, String sort, String type,
 			Connection conn) throws SQLException {
 		AddressRefDataSet res = new AddressRefDataSet();
 		ArrayList<AddressRefData> datalist = new ArrayList<AddressRefData>();
 		String whereclause = "";
-		String orderclause = "";
-		if (type.equals("1")) {
+		String orderclause = "ORDER BY code";
+		/*if (type.equals("1")) {
 			orderclause += " ORDER BY code ";
 		} else if (type.equals("2")) {
 			orderclause += " ORDER BY code ";
@@ -295,27 +358,28 @@ public class AddressDao {
 			} else {
 				orderclause += " desc ";
 			}
-		}
-		PagerData pgdata = asdata.getPager();
-		String searchStr = "";
+		}*/
+		// PagerData pgdata = asdata.getPager();
+		// String searchStr = "";
 		// searchStr = AdvancedSearchStringUtil.getSearchString(asdata.getSearch());
-		if (!searchStr.isEmpty()) {
+/*		if (!searchStr.isEmpty()) {
 			whereclause += searchStr;
 		}
 		if (!searchVal.equals("")) {
 			whereclause += " WHERE ( code LIKE '%" + searchVal + "%' OR despmyan LIKE '%" + searchVal
 					+ "%' OR  despeng LIKE '%" + searchVal + "%')";
 
-		}
-		int start = pgdata.getStart() - 1;
-		ArrayList<DBRecord> dbrs = DBMgr.getDBRecordSandE(define(), whereclause, orderclause, start, pgdata.getEnd(), 0,
+		}*/
+		// int start = pgdata.getStart() - 1;
+		int start = 1;
+		ArrayList<DBRecord> dbrs = DBMgr.getDBRecordSandE(define(), whereclause, orderclause, start, 1000, 0,
 				conn);
 
 		for (int i = 0; i < dbrs.size(); i++) {
 			datalist.add(getDBRecord(dbrs.get(i)));
 		}
-		res.setPageSize(pgdata.getSize());
-		res.setCurrentPage(pgdata.getCurrent());
+		// res.setPageSize(pgdata.getSize());
+		// res.setCurrentPage(pgdata.getCurrent());
 		if (datalist.size() > 0) {
 			res.setState(true);
 		} else {

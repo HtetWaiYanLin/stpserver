@@ -39,6 +39,17 @@ public class AddressMgr {
 		}
 		return ref;
 	}
+	
+	public static Ref1[] getAllDistrict( MrBean user) {
+		Ref1[] ref = null;
+		Connection conn = ConnAdmin.getConn(user.getUser().getOrganizationID());
+		try {
+			ref = AddressDao.getAllDistrict(conn);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ref;
+	}
 
 	public static Ref1[] getTownshipByDistinct(String distinct, MrBean user) {
 		Ref1[] ref = null;
@@ -51,6 +62,19 @@ public class AddressMgr {
 
 		return ref;
 	}
+	public static Ref1[] getAllTownship(MrBean user) {
+		Ref1[] ref = null;
+		Connection conn = ConnAdmin.getConn(user.getUser().getOrganizationID());
+		try {
+			ref = AddressDao.getAllTownship(conn);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return ref;
+	}
+	
+	
 
 	public static WardData saveWard(WardData aData, MrBean user) {
 		try {
@@ -146,12 +170,12 @@ public class AddressMgr {
 		return res;
 	}
 
-	public static AddressRefDataSet searchtownship(AdvancedSearchData p, String searchVal, String sort, String type,
+	public static AddressRefDataSet searchtownship(String searchVal, String sort, String type,
 			MrBean user) {
 		Connection conn = ConnAdmin.getConn(user.getUser().getOrganizationID());
 		AddressRefDataSet res = new AddressRefDataSet();
 		try {
-			res = AddressDao.search(p, searchVal, sort, type, conn);
+			res = AddressDao.search(searchVal, sort, type, conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

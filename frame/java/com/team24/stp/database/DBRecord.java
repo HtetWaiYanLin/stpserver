@@ -11,7 +11,7 @@ public class DBRecord {
 	}
 
 	public DBRecord(DBRecord a) {
-		setFields(new ArrayList());
+		setFields(new ArrayList<DBField>());
 		for (int i = 0; i < a.getFields().size(); i++) {
 			getFields().add(new DBField((DBField) a.getFields().get(i)));
 		}

@@ -6,9 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import com.nirvasoft.database.DBField;
-import com.nirvasoft.database.DBMgr;
-import com.nirvasoft.database.DBRecord;
+import com.team24.stp.database.DBField;
+import com.team24.stp.database.DBMgr;
+import com.team24.stp.database.DBRecord;
 import com.team24.stp.framework.Result;
 import com.team24.stp.shared.ClinicData;
 import com.team24.stp.shared.ClinicDataset;
@@ -24,8 +24,8 @@ public class ClinicDao {
 		ret.setTableName(Table_Name);
 		ret.setFields(new ArrayList<DBField>());
 		ret.getFields().add(new DBField("syskey", (byte) 2));
-		ret.getFields().add(new DBField("created_date", (byte) 5));
-		ret.getFields().add(new DBField("modified_date", (byte) 5));
+		ret.getFields().add(new DBField("created_date", (byte) 6));
+		ret.getFields().add(new DBField("modified_date", (byte) 6));
 		ret.getFields().add(new DBField("record_status", (byte) 1));
 		ret.getFields().add(new DBField("user_syskey", (byte) 2));
 		ret.getFields().add(new DBField("t1", (byte) 5));
@@ -54,7 +54,7 @@ public class ClinicDao {
 		ret.getFields().add(new DBField("n4", (byte) 1));
 		ret.getFields().add(new DBField("n5", (byte) 1));
 		ret.getFields().add(new DBField("n6", (byte) 2));
-		ret.getFields().add(new DBField("n7", (byte) 21));
+		ret.getFields().add(new DBField("n7", (byte) 2));
 		ret.getFields().add(new DBField("n8", (byte) 2));
 		ret.getFields().add(new DBField("n9", (byte) 2));
 		ret.getFields().add(new DBField("n10", (byte) 2));
@@ -64,8 +64,8 @@ public class ClinicDao {
 	public static ClinicData getDBRecord(DBRecord adbr) {
 		ClinicData ret = new ClinicData();
 		ret.setSyskey(adbr.getLong("syskey"));
-		ret.setCreated_date(adbr.getString("created_date"));
-		ret.setModified_date(adbr.getString("modified_date"));
+		ret.setCreated_date(adbr.getDate("created_date"));
+		ret.setModified_date(adbr.getDate("modified_date"));
 		ret.setRecord_status(adbr.getInt("record_status"));
 		ret.setUser_syskey(adbr.getLong("user_syskey"));
 		ret.setT1(adbr.getString("t1"));
@@ -105,10 +105,10 @@ public class ClinicDao {
 	public static DBRecord setDBRecord(ClinicData data) {
 		DBRecord ret = define();
 		ret.setValue("syskey", data.getSyskey());
-		ret.setValue("createddate", data.getCreated_date());
-		ret.setValue("modifieddate", data.getModified_date());
-		ret.setValue("recordstatus", data.getRecord_status());
-		ret.setValue("usersysKey", data.getUser_syskey());
+		ret.setValue("created_date", data.getCreated_date());
+		ret.setValue("modified_date", data.getModified_date());
+		ret.setValue("record_status", data.getRecord_status());
+		ret.setValue("user_sysKey", data.getUser_syskey());
 		ret.setValue("t1", data.getT1());
 		ret.setValue("t2", data.getT2());
 		ret.setValue("t3", data.getT3());
@@ -145,14 +145,14 @@ public class ClinicDao {
 
 	public static ClinicData read(long syskey, Connection conn) throws SQLException {
 		ClinicData ret = new ClinicData();
-		ArrayList<DBRecord> dbrs = DBMgr.getDBRecords(define(), "WHERE recordstatus<>4 AND syskey=" + syskey, "", conn);
+		ArrayList<DBRecord> dbrs = DBMgr.getDBRecords(define(), "WHERE record_status<>4 AND syskey=" + syskey, "", conn);
 		if (dbrs.size() > 0)
 			ret = getDBRecord(dbrs.get(0));
 		return ret;
 	}
 
 	public static boolean isCodeExist(ClinicData obj, Connection conn) throws SQLException {
-		ArrayList<DBRecord> dbrs = DBMgr.getDBRecords(define(), " WHERE recordstatus<>4 AND syskey =" + obj.getSyskey(),
+		ArrayList<DBRecord> dbrs = DBMgr.getDBRecords(define(), " WHERE record_status<>4 AND syskey =" + obj.getSyskey(),
 				"", conn);
 		if (dbrs.size() > 0) {
 			return true;
@@ -184,7 +184,7 @@ public class ClinicDao {
 
 	public static Result update(ClinicData obj, Connection conn) throws SQLException {
 		Result res = new Result();
-		String sql = DBMgr.updateString(" WHERE recordstatus <>4 AND Syskey=" + obj.getSyskey(), define(), conn);
+		String sql = DBMgr.updateString(" WHERE record_status <>4 AND Syskey=" + obj.getSyskey(), define(), conn);
 		PreparedStatement stmt = conn.prepareStatement(sql);
 		DBRecord dbr = setDBRecord(obj);
 		DBMgr.setValues(stmt, dbr);
@@ -197,7 +197,7 @@ public class ClinicDao {
 	public static Result delete(long syskey, Connection conn) throws SQLException {
 
 		Result res = new Result();
-		String sql = "UPDATE " + Table_Name + " SET recordstatus=4 WHERE syskey=?";
+		String sql = "UPDATE " + Table_Name + " SET record_status=4 WHERE syskey=?";
 		PreparedStatement stmt = conn.prepareStatement(sql);
 		stmt.setLong(1, syskey);
 		int rs = stmt.executeUpdate();
@@ -213,21 +213,12 @@ public class ClinicDao {
 		return res;
 	}
 
-	public static ClinicDataset searchClinic(String searchVal, String start, String end, String sort, String order,
-			Connection conn) throws SQLException {
+	public static ClinicDataset searchClinic(Connection conn) throws SQLException {
 		ClinicDataset res = new ClinicDataset();
 		ArrayList<ClinicData> datalist = new ArrayList<ClinicData>();
-
-		String whereclause = " WHERE recordstatus <> 4 ";
-		if (searchVal != null) {
-			if (!searchVal.isEmpty()) {
-				whereclause += " AND   t1 LIKE '%" + searchVal + "%' OR t2 LIKE '%" + searchVal + "%' "
-						+ "OR  syskey LIKE '%" + searchVal + "%'";
-			}
-		}
-
+		String whereclause = " WHERE record_status <> 4 ";
 		String sql = "SELECT * FROM ( SELECT ROW_NUMBER() OVER (ORDER BY syskey) AS RowNum,* FROM " + Table_Name
-				+ whereclause + " ) AS RowConstrainedResult  WHERE RowNum >= " + start + "  and RowNum <= " + end;
+				+ whereclause + " ) AS RowConstrainedResult  WHERE RowNum >= 0 and RowNum <= 10000";
 		PreparedStatement stmt = conn.prepareStatement(sql);
 		ResultSet rset = stmt.executeQuery();
 
@@ -237,6 +228,9 @@ public class ClinicDao {
 			ret.setT1(rset.getString("t1"));
 			ret.setT2(rset.getString("t2"));
 			ret.setT3(rset.getString("t3"));
+			ret.setT5(rset.getString("t5"));
+			ret.setT6(rset.getString("t6"));
+			ret.setT11(rset.getString("t11"));
 			ret.setN1(rset.getInt("n1"));
 			ret.setN2(rset.getInt("n2"));
 			datalist.add(ret);

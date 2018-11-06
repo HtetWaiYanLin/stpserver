@@ -59,6 +59,15 @@ public class ServiceAddress {
 		res = AddressMgr.getDistinctbyDiv(division, getUser());
 		return res;
 	}
+	
+	@GET
+	@Path("getAllDistrict")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Ref1[] getAllDistrict() {
+		Ref1[] res = null;
+		res = AddressMgr.getAllDistrict(getUser());
+		return res;
+	}
 
 	@GET
 	@Path("getTownshipByDistinct")
@@ -67,6 +76,15 @@ public class ServiceAddress {
 		String distinct = request.getParameter("distinct");
 		Ref1[] res = null;
 		res = AddressMgr.getTownshipByDistinct(distinct, getUser());
+		return res;
+	}
+	
+	@GET
+	@Path("getAllTownship")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Ref1[] getAllTownship() {
+		Ref1[] res = null;
+		res = AddressMgr.getAllTownship(getUser());
 		return res;
 	}
 
@@ -112,16 +130,16 @@ public class ServiceAddress {
 		return res;
 	}
 
-	@POST
+	@GET
 	@Path("searchtownship")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public AddressRefDataSet searchtownship(AdvancedSearchData p) {
+	public AddressRefDataSet searchtownship() {
 		String searchVal = request.getParameter("searchVal");
 		String sort = request.getParameter("sort");
 		String type = request.getParameter("type");
 		AddressRefDataSet res = new AddressRefDataSet();
-		res = AddressMgr.searchtownship(p, searchVal, sort, type, getUser());
+		res = AddressMgr.searchtownship(searchVal, sort, type, getUser());
 		return res;
 	}
 

@@ -221,7 +221,7 @@ public class DBMgr
   public static ArrayList<DBRecord> getDBRecords(DBRecord aDBRecord, String aFilter, String aOrder, Connection aConnection)
     throws SQLException
   {
-    ArrayList<DBRecord> ret = new ArrayList();
+    ArrayList<DBRecord> ret = new ArrayList<DBRecord>();
     ResultSet rs = getResultSet(aDBRecord, aFilter, aOrder, aConnection);
     while (rs.next())
     {
@@ -234,7 +234,7 @@ public class DBMgr
   public static ArrayList<DBRecord> getDBRecordSandE(DBRecord aDBRecord, String aFilter, String aOrder, int start, int end, int queryTimeoutSecs, Connection aConnection)
     throws SQLException
   {
-    ArrayList<DBRecord> ret = new ArrayList();
+    ArrayList<DBRecord> ret = new ArrayList<DBRecord>();
     ResultSet rs = getResultSetWithSandE(aDBRecord, aFilter, aOrder, start, end, queryTimeoutSecs, aConnection);
     while (rs.next())
     {

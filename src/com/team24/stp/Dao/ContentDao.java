@@ -10,13 +10,13 @@ import com.team24.stp.database.DBField;
 import com.team24.stp.database.DBMgr;
 import com.team24.stp.database.DBRecord;
 import com.team24.stp.framework.Result;
-import com.team24.stp.shared.CompanyData;
-import com.team24.stp.shared.CompanyDataset;
+import com.team24.stp.shared.ContentData;
+import com.team24.stp.shared.ContentDataSet;
 import com.team24.stp.shared.ValueCaptionData;
 import com.team24.stp.shared.ValueCaptionDataSet;
 
-public class CompanyDao {
-	final static String Table_Name = "STPP_Company";
+public class ContentDao {
+	final static String Table_Name = "STPP_Contents";
 
 	public static DBRecord define() {
 		DBRecord ret = new DBRecord();
@@ -60,8 +60,8 @@ public class CompanyDao {
 		return ret;
 	}
 
-	public static CompanyData getDBRecord(DBRecord adbr) {
-		CompanyData ret = new CompanyData();
+	public static ContentData getDBRecord(DBRecord adbr) {
+		ContentData ret = new ContentData();
 		ret.setSyskey(adbr.getLong("syskey"));
 		ret.setCreateddate(adbr.getDate("created_date"));
 		ret.setModifieddate(adbr.getDate("modified_date"));
@@ -101,7 +101,7 @@ public class CompanyDao {
 		return ret;
 	}
 
-	public static DBRecord setDBRecord(CompanyData data) {
+	public static DBRecord setDBRecord(ContentData data) {
 		DBRecord ret = define();
 		ret.setValue("syskey", data.getSyskey());
 		ret.setValue("created_date", data.getCreateddate());
@@ -142,15 +142,16 @@ public class CompanyDao {
 		return ret;
 	}
 
-	public static CompanyData read(long syskey, Connection conn) throws SQLException {
-		CompanyData ret = new CompanyData();
-		ArrayList<DBRecord> dbrs = DBMgr.getDBRecords(define(), "WHERE record_status<>4 AND syskey=" + syskey, "", conn);
+	public static ContentData read(long syskey, Connection conn) throws SQLException {
+		ContentData ret = new ContentData();
+		ArrayList<DBRecord> dbrs = DBMgr.getDBRecords(define(), "WHERE record_status<>4 AND syskey=" + syskey, "",
+				conn);
 		if (dbrs.size() > 0)
 			ret = getDBRecord(dbrs.get(0));
 		return ret;
 	}
 
-	public static boolean isMenu(CompanyData obj, Connection conn) throws SQLException {
+	public static boolean isExits(ContentData obj, Connection conn) throws SQLException {
 		boolean flag = false;
 		if (obj.getN1() == 1) {
 			flag = isCodeExist(obj, conn);
@@ -160,7 +161,7 @@ public class CompanyDao {
 		return flag;
 	}
 
-	public static boolean isCodeExist(CompanyData obj, Connection conn) throws SQLException {
+	public static boolean isCodeExist(ContentData obj, Connection conn) throws SQLException {
 		ArrayList<DBRecord> dbrs = DBMgr.getDBRecords(define(), " WHERE recordstatus<>4 AND syskey =" + obj.getSyskey(),
 				"", conn);
 		if (dbrs.size() > 0) {
@@ -170,7 +171,7 @@ public class CompanyDao {
 		}
 	}
 
-	public static boolean isChildMenuExist(CompanyData obj, Connection conn) throws SQLException {
+	public static boolean isChildMenuExist(ContentData obj, Connection conn) throws SQLException {
 		ArrayList<DBRecord> dbrs = DBMgr.getDBRecords(define(),
 				" WHERE RecordStatus<>4 AND  T1 LIKE '" + obj.getT1() + "' AND n2= " + obj.getN2(), "", conn);
 		if (dbrs.size() > 0) {
@@ -180,10 +181,10 @@ public class CompanyDao {
 		}
 	}
 
-	public static Result insert(CompanyData obj, Connection conn) throws SQLException {
+	public static Result insert(ContentData obj, Connection conn) throws SQLException {
 		Result res = new Result();
 
-		if (!isMenu(obj, conn)) {
+		if (!isExits(obj, conn)) {
 			String sql = DBMgr.insertString(define(), conn);
 			System.out.println(sql);
 			PreparedStatement stmt = conn.prepareStatement(sql);
@@ -202,7 +203,7 @@ public class CompanyDao {
 
 	}
 
-	public static Result update(CompanyData obj, Connection conn) throws SQLException {
+	public static Result update(ContentData obj, Connection conn) throws SQLException {
 		Result res = new Result();
 		String sql = DBMgr.updateString(" WHERE recordstatus <>4 AND Syskey=" + obj.getSyskey(), define(), conn);
 		PreparedStatement stmt = conn.prepareStatement(sql);
@@ -248,10 +249,10 @@ public class CompanyDao {
 		return res;
 	}
 
-	public static CompanyDataset searchCompany(String searchVal, String start, String end, String sort, String order,
+	public static ContentDataSet searchContent(String searchVal, String start, String end, String sort, String order,
 			Connection conn) throws SQLException {
-		CompanyDataset res = new CompanyDataset();
-		ArrayList<CompanyData> datalist = new ArrayList<CompanyData>();
+		ContentDataSet res = new ContentDataSet();
+		ArrayList<ContentData> datalist = new ArrayList<ContentData>();
 
 		String whereclause = " WHERE record_status <> 4 ";
 		if (searchVal != null) {
@@ -267,13 +268,16 @@ public class CompanyDao {
 		ResultSet rset = stmt.executeQuery();
 
 		while (rset.next()) {
-			CompanyData ret = new CompanyData();
+			ContentData ret = new ContentData();
 			ret.setSyskey(rset.getLong("syskey"));
 			ret.setT1(rset.getString("t1"));
-			ret.setT2(rset.getString("t2"));
+			ret.setT2(rset.getString("t2").substring(0,20)+"...");
 			ret.setT3(rset.getString("t3"));
-			ret.setN1(rset.getInt("n1"));
-			ret.setN2(rset.getInt("n2"));
+			ret.setT4(rset.getString("t4"));
+			ret.setT5(rset.getString("t5"));
+			ret.setT10(rset.getString("t10").substring(0, 51)+"...");
+			ret.setN6(rset.getInt("n6"));
+			ret.setN7(rset.getInt("n7"));
 			datalist.add(ret);
 		}
 		if (datalist.size() > 0) {
@@ -287,13 +291,13 @@ public class CompanyDao {
 		res.setTotalCount(result.getInt("recCount"));
 		// res.setPageSize(pager.getSize());
 		// res.setCurrentPage(pager.getCurrent());
-		CompanyData[] dataarry = new CompanyData[datalist.size()];
+		ContentData[] dataarry = new ContentData[datalist.size()];
 		dataarry = datalist.toArray(dataarry);
 		res.setData(dataarry);
 		return res;
 	}
-	
-	public static ValueCaptionDataSet getCompanyName(Connection conn) throws SQLException {
+
+	public static ValueCaptionDataSet getContentName(Connection conn) throws SQLException {
 		ValueCaptionDataSet result = new ValueCaptionDataSet();
 		ArrayList<ValueCaptionData> datalist = new ArrayList<ValueCaptionData>();
 
@@ -314,11 +318,11 @@ public class CompanyDao {
 		return result;
 	}
 
-	public static String getCompanyID(Connection aConn) {
+	public static String getContentID(Connection aConn) {
 		String ret = "";
 		try {
-			String sql = " SELECT 'I-'+RIGHT\r\n"
-					+ " ('00'+Cast(ISNULL((SUBSTRING(MAX(t1),3,5))+1,1) AS varchar),6) AS id  FROM " + Table_Name;
+			String sql = " SELECT 'C-'+RIGHT\r\n"
+					+ " ('000'+Cast(ISNULL((SUBSTRING(MAX(t1),4,6))+1,1) AS varchar),7) AS id  FROM " + Table_Name;
 			PreparedStatement ps = aConn.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next())

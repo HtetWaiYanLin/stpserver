@@ -127,7 +127,6 @@ public class SysKeyMgr
     throws SQLException
   {
     int syskey = 0;
-    boolean l_result = false;
     try
     {
       aConnection.setAutoCommit(false);
@@ -140,9 +139,6 @@ public class SysKeyMgr
         syskeytable.setValue("module", aModule);
         syskeytable.setValue("code", "syskey");
         DBMgr.setValues(stmt, syskeytable);
-        if (stmt.executeUpdate() > 0) {
-          l_result = true;
-        }
         int autokey = readAutokey(syskey, "syskey", aConnection);
         
         Statement updateStmt = aConnection.createStatement();
@@ -166,7 +162,6 @@ public class SysKeyMgr
     throws SQLException
   {
     int syskey = 0;
-    boolean l_result = false;
     try
     {
       aConnection.setAutoCommit(false);
@@ -179,9 +174,6 @@ public class SysKeyMgr
         syskeytable.setValue("module", aModule);
         syskeytable.setValue("code", aTableName);
         DBMgr.setValues(stmt, syskeytable);
-        if (stmt.executeUpdate() > 0) {
-          l_result = true;
-        }
         int autokey = readAutokey(syskey, "syskey", aConnection);
         
         Statement updateStmt = aConnection.createStatement();
@@ -205,7 +197,7 @@ public class SysKeyMgr
   {
     DBRecord ret = new DBRecord();
     ret.setTableName("SysKey");
-    ret.setFields(new ArrayList());
+    ret.setFields(new ArrayList<DBField>());
     ret.getFields().add(new DBField("syskey", (byte)1));
     ret.getFields().add(new DBField("module", (byte)1));
     ret.getFields().add(new DBField("code", (byte)5));
@@ -216,7 +208,7 @@ public class SysKeyMgr
   {
     DBRecord ret = new DBRecord();
     ret.setTableName(aTableName);
-    ret.setFields(new ArrayList());
+    ret.setFields(new ArrayList<DBField>());
     ret.getFields().add(new DBField("syskey", (byte)1));
     ret.getFields().add(new DBField("module", (byte)1));
     ret.getFields().add(new DBField("code", (byte)5));

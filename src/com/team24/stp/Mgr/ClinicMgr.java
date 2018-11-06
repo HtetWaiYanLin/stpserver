@@ -2,7 +2,6 @@ package com.team24.stp.Mgr;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.nirvasoft.database.SysKeyMgr;
@@ -12,7 +11,6 @@ import com.team24.stp.framework.MrBean;
 import com.team24.stp.framework.Result;
 import com.team24.stp.shared.ClinicData;
 import com.team24.stp.shared.ClinicDataset;
-import com.team24.stp.shared.MenuRole;
 import com.team24.stp.shared.ValueCaptionDataSet;
 import com.team24.stp.util.ServerUtil;
 
@@ -45,30 +43,12 @@ public class ClinicMgr {
 		return res;
 	}
 
-	public static MenuRole initMenuRoleData(MenuRole mr, ClinicData data, MrBean user, Connection con) {
-
-		String date23 = new SimpleDateFormat("yyyyMMdd").format(new Date());
-		mr.setUserId(user.getUser().getUserId());
-		mr.setUserName(user.getUser().getUserName());
-		mr.setModifiedDate(date23);
-		mr.setN1(1);
-		mr.setN2(data.getSyskey());
-		if (mr.getSyskey() == 0) {
-			mr.setCreatedDate(date23);
-			mr.setRecordStatus(1);
-			mr.setSyncBatch(0);
-			mr.setSyncStatus(1);
-		}
-		return mr;
-	}
-
 	public static ClinicData initData(ClinicData data, MrBean user, Connection con) {
-		String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
-		data.setModified_date(date);
+		data.setModified_date(new java.sql.Date(new Date().getTime()));
 		if (data.getSyskey() == 0) {
 			String id = ClinicDao.getClinicId(con);
 			data.setT1(id);
-			data.setCreated_date(date);
+			data.setCreated_date(new java.sql.Date(new Date().getTime()));
 			data.setRecord_status(1);
 		}
 		return data;
@@ -97,12 +77,11 @@ public class ClinicMgr {
 		return res;
 	}
 
-	public static ClinicDataset searchClinicbyValue(String searchVal, String start, String end, String sort,
-			String order, MrBean user) {
+	public static ClinicDataset searchClinicbyValue(MrBean user) {
 		Connection conn = ConnAdmin.getConn(user.getUser().getOrganizationID());
 		ClinicDataset res = new ClinicDataset();
 		try {
-			res = ClinicDao.searchClinic(searchVal, start, end, sort, order, conn);
+			res = ClinicDao.searchClinic(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
